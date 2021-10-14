@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Route</title>
+</head>
+<body>
+    <h1>Edit Route</h1>
+    <form action="/routes/<%= route._id%>?_method=PUT" method="POST">
+        <div>
+            <lable for="title">Title</lable>
+            <input type="text" id="title" name="route[title]" value="<%= route.title%>">
+        </div>
+        <div>
+            <lable for="location">location</lable>
+            <input type="text" id="location" name="route[location]" value="<%= route.location %>">
+        </div>
+        <button>Uptdate Route</button>
+    </form>
+    <a href="/routes/<%= route._id %>">Back to Route</a>
+</body>
+</html>
