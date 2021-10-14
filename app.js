@@ -24,11 +24,12 @@ app.get('/', (req, res) => {
     res.render('home')
 })
 
-app.get('/makebikeroute', async (req,res)=> {
-    const route = new Route({title:'A20', location:"małopolska" });
-    await route.save();
-    res.send(route)
+app.get('/routes', async (req, res) => {
+    const routes = await Route.find({});
+    res.render('routes/index', {routes})
 })
+
+
 
 app.listen(3000, () => {
     console.log('Serving on port 3000')
