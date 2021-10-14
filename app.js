@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
-const Route = require('./models/routes')
+const Route = require('./models/routes');
 
 mongoose.connect('mongodb://localhost:27017/bike-routes', {
     useNewUrlParser: true,
@@ -24,11 +24,11 @@ app.get('/', (req, res) => {
     res.render('home')
 })
 
-// app.get('/makebikeroute', async (req,res)=> {
-//     const route = new Route({title:'A20', location:"małopolska" });
-//     await route.save();
-//     res.send(route)
-// })
+app.get('/makebikeroute', async (req,res)=> {
+    const route = new Route({title:'A20', location:"małopolska" });
+    await route.save();
+    res.send(route)
+})
 
 app.listen(3000, () => {
     console.log('Serving on port 3000')

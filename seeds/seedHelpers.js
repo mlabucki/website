@@ -1,13 +1,10 @@
-const descriptors = [
+module.exports.descriptors = [
     'Velo',
     'Rajd',
     'Pętla',
     'Wyprawa do',
     'Szlakiem',
     'Petelka',
-]
-
-const descriptors2 = [
     'Szlakiem dworów i pałaców',
     'Puszcza ',
     'Mokradła',
@@ -15,20 +12,7 @@ const descriptors2 = [
 
 ]
 
-const location = [
-    'Olkusz',
-    'Bochnia',
-    'Chrzanów',
-    'Trzebinia',
-    'Skawina',
-    'Dobczyce',
-    'Wieliczka',
-    'Krzeszowice',
-    'Miechów',
-    'Olkusz',
-]
-
-const terain = [
+module.exports.places = [
     'małopolski',
     'ziemi miechowskiej',
     'wiślan',
