@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const CyclingRoutesSchema = new Schema({
     title: String,
+    image:String,
     location: String,
     distance: Number,
     type: String,
