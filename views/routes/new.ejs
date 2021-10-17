@@ -1,15 +1,34 @@
 <% layout('layouts/boilerplate') %>
 
-    <h1>Add new Route</h1>
-    <form action="/routes" method="POST">
-        <div>
-            <lable for="title">Title</lable>
-            <input type="text" id="title" name="route[title]">
-        </div>
-        <div>
-            <lable for="location">location</lable>
-            <input type="text" id="location" name="route[location]">
-        </div>
-        <button>Add Route</button>
-    </form>
-    <a href="/routes">All Routes</a>
+<div class="row">
+    <h1 class="text-center">New Route</h1>
+    <div class="col-6 offset-3">
+        <h1>Add new Route</h1>
+        <form action="/routes" method="POST">
+            <div class="mb-3">
+                <lable class="form-lable" for="title">Title</lable>
+                <input class="form-control" type="text" id="title" name="route[title]">
+            </div>
+            <div class="mb-3">
+                <lable class="form-lable" for="location">Location</lable>
+                <input class="form-control" type="text" id="location" name="route[location]">
+            </div>
+            <div class="mb-3">
+                <lable class="form-lable" description="distance">Distance</lable>
+                <input class="form-control" type="text" id="distance" name="route[distance]"></input>
+            </div>
+            <div class="mb-3">
+                <lable class="form-lable" for="image">Image URL</lable>
+                <input class="form-control" type="text" id="image" name="route[image]">
+            </div>
+            <div class="mb-3">
+                <lable class="form-lable" description="image">Description</lable>
+                <textarea class="form-control" type="text" id="description" name="route[description]"></textarea>
+            </div>
+            <div class="mb-3">
+            <button class="btn btn-success">Add Route</button>
+            </div>
+        </form>
+        <a href="/routes">All Routes</a>
+    </div>
+</div>
