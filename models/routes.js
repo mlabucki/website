@@ -8,6 +8,12 @@ const CyclingRoutesSchema = new Schema({
     distance: Number,
     type: String,
     description: String,
+    reviews: [
+        {
+            typse:Schema.Types.ObjectId,
+            ref:'Review'
+        }
+    ]
 });
 
 module.exports = mongoose.model('Route', CyclingRoutesSchema);
