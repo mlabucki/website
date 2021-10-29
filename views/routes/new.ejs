@@ -1,27 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
+<% layout('layouts/boilerplate') %>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Route</title>
-</head>
+<div class="row">
+    <h1 class="text-center">New Route</h1>
+    <div class="col-6 offset-3">
+        <h1>Add new Route</h1>
+        <form action="/routes" method="POST" novalidate class="validated-form">
+            <div class="mb-3">
+                <lable class="form-lable" for="title">Title</lable>
+                <input class="form-control" type="text" id="title" name="route[title]" required  >
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <lable class="form-lable" for="location">Location</lable>
+                <input class="form-control" type="text" id="location" name="route[location]"required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <lable class="form-lable" description="distance">Distance</lable>
+                <input class="form-control" type="text" id="distance" name="route[distance]"required ></input>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <lable class="form-lable" for="image">Image URL</lable>
+                <input class="form-control" type="text" id="image" name="route[image]"required >
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <lable class="form-lable" description="image">Description</lable>
+                <textarea class="form-control" type="text" id="description" name="route[description]"required></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+            <button class="btn btn-success">Add Route</button>
+            </div>
+        </form>
+        <a href="/routes">All Routes</a>
+    </div>
+</div>
 
-<body>
-    <h1>Add new Route</h1>
-    <form action="/routes" method="POST">
-        <div>
-            <lable for="title">Title</lable>
-            <input type="text" id="title" name="route[title]">
-        </div>
-        <div>
-            <lable for="location">location</lable>
-            <input type="text" id="location" name="route[location]">
-        </div>
-        <button>Add Route</button>
-    </form>
-    <a href="/routes">All Routes</a>
-</body>
-
-</html>
