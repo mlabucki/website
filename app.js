@@ -7,6 +7,7 @@ const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const Route = require('./models/routes');
+const Review = require('./models/review');
 
 mongoose.connect('mongodb://localhost:27017/bike-routes', {
     useNewUrlParser: true,
@@ -82,6 +83,15 @@ app.delete('/routes/:id', catchAsync(async (req, res) => {
     await Route.findByIdAndDelete(id)
     res.redirect('/routes');
 }));
+
+app.post('/routes/:id/reviews', catchAsync(async(req,res)=> {
+    const route = await Route.findById(req.params.id);
+    const review = new Review(req.body.review);
+    route.reviews.push(review);
+    await review.save();
+    await route.save();
+    res.reditrect(`/routes/${route._id}`);
+}))
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
