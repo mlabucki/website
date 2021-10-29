@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
-const {routeSchema} = require('./schemas');
+const {routeSchema, reviewSchema} = require('./schemas');
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
@@ -41,6 +41,15 @@ const validateRoute = (req,res,next) => {
     }
 }
 
+const validateReview = (req,res,next)=> {
+    const {error} = reviewSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+}
 
 app.get('/', (req, res) => {
     res.render('home')
@@ -84,7 +93,7 @@ app.delete('/routes/:id', catchAsync(async (req, res) => {
     res.redirect('/routes');
 }));
 
-app.post('/routes/:id/reviews', catchAsync(async(req,res)=> {
+app.post('/routes/:id/reviews',validateReview, catchAsync(async(req,res)=> {
     const route = await Route.findById(req.params.id);
     const review = new Review(req.body.review);
     route.reviews.push(review);
