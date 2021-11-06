@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
-const {routeSchema, reviewSchema} = require('./schemas');
+const {routeSchema, reviewSchema} = require('./schemas.js');
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
@@ -23,11 +23,10 @@ db.once("open", () => {
 
 const app = express();
 
-
+app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
-app.engine('ejs', ejsMate)
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
@@ -60,11 +59,11 @@ app.get('/routes', catchAsync(async (req, res,) => {
     res.render('routes/index', { routes })
 }));
 
-app.get('/routes/new', catchAsync(async (req, res,) => {
+app.get('/routes/new', (req, res,) => {
     res.render('routes/new');
-}));
+});
 
-app.post('/routes',validateRoute, catchAsync(async (req, res,) => {
+app.post('/routes', validateRoute, catchAsync(async (req, res, next) => {
 
     const route = new Route(req.body.route);
     await route.save();
@@ -72,7 +71,7 @@ app.post('/routes',validateRoute, catchAsync(async (req, res,) => {
 }));
 
 app.get('/routes/:id', catchAsync(async (req, res) => {
-    const route = await Route.findById(req.params.id)
+    const route = await Route.findById(req.params.id).populate('reviews');
     res.render('routes/show', { route });
 }));
 
@@ -81,7 +80,7 @@ app.get('/routes/:id/edit', catchAsync(async (req, res) => {
     res.render('routes/edit', { route });
 }));
 
-app.put('/routes/:id',validateRoute, catchAsync(async (req, res) => {
+app.put('/routes/:id', validateRoute, catchAsync(async (req, res) => {
     const { id } = req.params;
     const route = await Route.findByIdAndUpdate(id, { ...req.body.route }) //spread object
     res.redirect(`/routes/${route._id}`)
@@ -99,7 +98,14 @@ app.post('/routes/:id/reviews',validateReview, catchAsync(async(req,res)=> {
     route.reviews.push(review);
     await review.save();
     await route.save();
-    res.reditrect(`/routes/${route._id}`);
+    res.redirect(`/routes/${route._id}`);
+}))
+
+app.delete('/routes/:id/reviews/:reviewId', catchAsync(async (req,res)=> {
+    const {id, reviewId } = req.params;
+    await Route.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/routes/${id}`);
 }))
 
 app.all('*', (req, res, next) => {

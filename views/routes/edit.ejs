@@ -1,49 +1,56 @@
-<% layout('layouts/boilerplate') %>
+<% layout('layouts/boilerplate')%>
+<div class="row">
+    <h1 class="text-center">Edit Roure</h1>
+    <div class="col-6 offset-3">
+        <form action="/routes/<%=route._id%>?_method=PUT" method="POST" novalidate class="validated-form">
+            <div class="mb-3">
+                <label class="form-label" for="title">Title</label>
+                <input class="form-control" type="text" id="title" name="route[title]"
+                    value="<%=route.title %>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="location">Location</label>
+                <input class="form-control" type="text" id="location" name="route[location]"
+                    value="<%=route.location %>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="image">Image Url</label>
+                <input class="form-control" type="text" id="image" name="route[image]"
+                    value="<%=route.image %>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="distance">Distance of the Route</label>
+                <div class="mb-3">
+                    <input class="form-control" type="text" id="route" name="route[distance]"
+                        value="<%=route.distance %>" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+            </div>
 
-    <div class="row">
-        <h1 class="text-center">Edit Route</h1>
-        <div class="col-6 offset-3">
-            <h1>Add new Route</h1>
-            <form action="/routes/<%= route._id%>?_method=PUT" method="POST" novalidate class="validated-form">
-                <div class="mb-3">
-                    <lable class="form-lable" for="title">Title</lable>
-                    <input class="form-control" type="text" id="title" name="route[title]"required  value="<%= route.title%>" >
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" type="text" id="description" name="route[description]"
+                    required><%= route.description%></textarea>
+                <div class="valid-feedback">
+                    Looks good!
                 </div>
-                <div class="mb-3">
-                    <lable class="form-lable" for="location">Location</lable>
-                    <input class="form-control" type="text" id="location" name="route[location]"required  value="<%= route.location %>">
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <lable class="form-lable" description="distance">Distance</lable>
-                    <input class="form-control" type="text" id="distance" name="route[distance]"required  value="<%= route.distance %>"></input>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <lable class="form-lable" for="image">Image URL</lable>
-                    <input class="form-control" type="text" id="image" name="route[image]"required value="<%= route.image %>">
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <lable class="form-lable" description="image">Description</lable>
-                    <textarea class="form-control" type="text" id="description" name="route[description]"required ><%= route.description %>"></textarea>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
-                <div class="mb-3">
+            </div>
+            <div class="mb-3">
                 <button class="btn btn-info">Update Route</button>
-                </div>
-            </form>
-            <a href="/routes/<%= route._id %>">Back to Route</a>
-        </div>
+            </div>
+        </form>
+        <a href="/routes/<%= route._id%>">Back To Routes</a>
+
     </div>
+</div>
