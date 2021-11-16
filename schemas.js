@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const {numer} = require('joi');
 
 module.exports.routeSchema = Joi.object({
     route: Joi.object({

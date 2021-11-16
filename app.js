@@ -2,12 +2,17 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
-const {routeSchema, reviewSchema} = require('./schemas.js');
-const catchAsync = require('./utils/catchAsync');
+const session = require('express-session');
+const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
-const Route = require('./models/routes');
-const Review = require('./models/review');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
+
+
+const routes = require('./routes/routes');
+const reviews = require('./routes/reviews')
 
 mongoose.connect('mongodb://localhost:27017/bike-routes', {
     useNewUrlParser: true,
@@ -29,88 +34,44 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname, 'public')))
 
-const validateRoute = (req,res,next) => {
-    const { error } = routeSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
+const sessionConfig = {
+    secret: 'thisshouldbeabettersecret!',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
+app.use(session(sessionConfig))
+app.use(flash());
 
-const validateReview = (req,res,next)=> {
-    const {error} = reviewSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-}
+app.use(passport.initialize())
+app.use(passport.session())
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+})
+
+app.use('/routes', routes)
+app.use('/routes/:id/reviews', reviews)
 
 app.get('/', (req, res) => {
     res.render('home')
 })
 
-app.get('/routes', catchAsync(async (req, res,) => {
-    const routes = await Route.find({});
-    res.render('routes/index', { routes })
-}));
-
-app.get('/routes/new', (req, res,) => {
-    res.render('routes/new');
-});
-
-app.post('/routes', validateRoute, catchAsync(async (req, res, next) => {
-
-    const route = new Route(req.body.route);
-    await route.save();
-    res.redirect(`/routes/${route._id}`)
-}));
-
-app.get('/routes/:id', catchAsync(async (req, res) => {
-    const route = await Route.findById(req.params.id).populate('reviews');
-    res.render('routes/show', { route });
-}));
-
-app.get('/routes/:id/edit', catchAsync(async (req, res) => {
-    const route = await Route.findById(req.params.id)
-    res.render('routes/edit', { route });
-}));
-
-app.put('/routes/:id', validateRoute, catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const route = await Route.findByIdAndUpdate(id, { ...req.body.route }) //spread object
-    res.redirect(`/routes/${route._id}`)
-}));
-
-app.delete('/routes/:id', catchAsync(async (req, res) => {
-    const { id } = req.params;
-    await Route.findByIdAndDelete(id)
-    res.redirect('/routes');
-}));
-
-app.post('/routes/:id/reviews',validateReview, catchAsync(async(req,res)=> {
-    const route = await Route.findById(req.params.id);
-    const review = new Review(req.body.review);
-    route.reviews.push(review);
-    await review.save();
-    await route.save();
-    res.redirect(`/routes/${route._id}`);
-}))
-
-app.delete('/routes/:id/reviews/:reviewId', catchAsync(async (req,res)=> {
-    const {id, reviewId } = req.params;
-    await Route.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
-    await Review.findByIdAndDelete(reviewId);
-    res.redirect(`/routes/${id}`);
-}))
-
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
-});
+})
 
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
@@ -120,4 +81,4 @@ app.use((err, req, res, next) => {
 
 app.listen(3000, () => {
     console.log('Serving on port 3000')
-});
+})
