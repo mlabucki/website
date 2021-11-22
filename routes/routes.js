@@ -3,8 +3,10 @@ const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
 const {routeSchema} = require('../schemas');
 
+
 const ExpressError = require('../utils/ExpressError');
 const Route = require('../models/routes');
+const { isLoggedIn } = require('../../middleware');
 
 const validateRoute = (req,res,next) => {
     const { error } = routeSchema.validate(req.body);
@@ -21,11 +23,11 @@ router.get('/', catchAsync(async (req, res,) => {
     res.render('routes/index', { routes })
 }));
 
-router.get('/new', (req, res,) => {
+router.get('/new', isLoggedIn, (req, res,) => {
     res.render('routes/new');
 });
 
-router.post('/', validateRoute, catchAsync(async (req, res, next) => {
+router.post('/', isLoggedIn, validateRoute, catchAsync(async (req, res, next) => {
     // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
     const route = new Route(req.body.campground);
     await route.save();
@@ -42,7 +44,7 @@ router.get('/:id', catchAsync(async (req, res) => {
     res.render('routes/show', { route });
 }));
 
-router.get('/:id/edit', catchAsync(async (req, res) => {
+router.get('/:id/edit',isLoggedIn,  catchAsync(async (req, res) => {
     const route = await Route.findById(req.params.id)
     if (!route) {
         req.flash('error', 'Cannot find that campground!');
@@ -51,14 +53,14 @@ router.get('/:id/edit', catchAsync(async (req, res) => {
     res.render('routes/edit', { route });
 }));
 
-router.put('/:id', validateRoute, catchAsync(async (req, res) => {
+router.put('/:id',isLoggedIn,  validateRoute, catchAsync(async (req, res) => {
     const { id } = req.params;
     const route = await Route.findByIdAndUpdate(id, { ...req.body.route }) //spread object
     req.flash('success', 'Successfully updated campground!');
     res.redirect(`/routes/${route._id}`)
 }));
 
-router.delete('/:id', catchAsync(async (req, res) => {
+router.delete('/:id',isLoggedIn,  catchAsync(async (req, res) => {
     const { id } = req.params;
     await Route.findByIdAndDelete(id)
     res.redirect('routes');
