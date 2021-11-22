@@ -11,8 +11,9 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 
 
-const routes = require('./routes/routes');
-const reviews = require('./routes/reviews')
+const userRoutes = require('./routes/users');
+const routeRoutes = require('./routes/routes');
+const reviewRoutes = require('./routes/reviews');
 
 mongoose.connect('mongodb://localhost:27017/bike-routes', {
     useNewUrlParser: true,
@@ -62,8 +63,10 @@ app.use((req, res, next) => {
     next();
 })
 
-app.use('/routes', routes)
-app.use('/routes/:id/reviews', reviews)
+
+app.use('/', userRoutes);
+app.use('/routes', routeRoutes);
+app.use('/routes/:id/reviews', reviewRoutes);
 
 app.get('/', (req, res) => {
     res.render('home')
