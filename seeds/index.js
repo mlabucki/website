@@ -23,6 +23,7 @@ const seedDB = async() => {
        const random10 =  Math.floor(Math.random()*10);
        const distance = Math.floor(Math.random()*20)+ 10;
        const route = new Route({
+           author: '619bb05f60ae8bbf2f1abdbe',
            location: `${cities[random10].city}, ${cities[random10].state}`,
            title: `${sample(descriptors)} ${sample(places)}`,
            image: 'https://source.unsplash.com/collection/2048565/250x250',
