@@ -1,4 +1,5 @@
 const Route = require('../models/routes');
+const { cloudinary } = require("../cloudinary");
 
 module.exports.index = async (req, res,) => {
     const routes = await Route.find({});
@@ -11,8 +12,10 @@ module.exports.renderNewForm = (req, res,) => {
 
 module.exports.createRoute = async (req, res, next) => {
     const route = new Route(req.body.campground);
+    route.images= req.files.map(f => ({url: f.path, filename: f.filename }));
     route.author = req.user._id;
     await route.save();
+    console.log(route);
     req.flash('success', 'Successfully made a new campground!');
     res.redirect(`/routes/${route._id}`)
 }
@@ -44,6 +47,15 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateRoute = async (req, res) => {
     const { id } = req.params;
     const route = await Route.findByIdAndUpdate(id, {... req.body.route});
+    const imgs = req.files.map(f => ({url: f.path, filename: f.filename }));
+    route.images.push(...imgs);
+    await route.save();
+    if(req.body.deleteImages){
+        for(let filename of req.body.deleteImages){
+            await cloudinary.uploader.destroy(filename);
+        }
+        await route.updateOne({$pull:{images: {filename:{$in: req.body.deleteImages}}}}); 
+    }
     req.flash('success', 'Successfully updated campground!');
     res.redirect(`/routes/${route._id}`)
 }

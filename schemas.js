@@ -7,8 +7,9 @@ module.exports.routeSchema = Joi.object({
         distance: Joi.number().required().min(0),
         location: Joi.string().required(),
         description: Joi.string().required(),
-        image: Joi.string().required(),
-    }).required()
+        // image: Joi.string().required(),
+    }).required(),
+    deleteImages:Joi.array()
 });
 
 module.exports.reviewSchema = Joi.object({

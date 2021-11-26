@@ -4,7 +4,7 @@
     <h1 class="text-center">New Route</h1>
     <div class="col-6 offset-3">
         <h1>Add new Route</h1>
-        <form action="/routes" method="POST" novalidate class="validated-form">
+        <form action="/routes" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
             <div class="mb-3">
                 <lable class="form-lable" for="title">Title</lable>
                 <input class="form-control" type="text" id="title" name="route[title]" required  >
@@ -27,12 +27,17 @@
                 </div>
             </div>
             <div class="mb-3">
+                <label for="image" class="form-label custom-file">Images</label>
+                <input class="form-control custom-file-lable" type="file" id="image" name="image" multiple>
+            </div>
+            
+            <!-- <div class="mb-3">
                 <lable class="form-lable" for="image">Image URL</lable>
                 <input class="form-control" type="text" id="image" name="route[image]"required >
                 <div class="valid-feedback">
                     Looks good!
                 </div>
-            </div>
+            </div> -->
             <div class="mb-3">
                 <lable class="form-lable" description="image">Description</lable>
                 <textarea class="form-control" type="text" id="description" name="route[description]"required></textarea>
