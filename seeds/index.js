@@ -19,7 +19,7 @@ const sample = array => array[Math.floor(Math.random() * array.length)];
 
 const seedDB = async() => {
     await Route.deleteMany({});
-    for(let i = 0; i < 50; i++){
+    for(let i = 0; i < 15; i++){
        const random10 =  Math.floor(Math.random()*10);
        const distance = Math.floor(Math.random()*20)+ 10;
        const route = new Route({
