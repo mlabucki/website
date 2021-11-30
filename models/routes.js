@@ -12,6 +12,8 @@ ImageSchema.virtual('thumbnail').get(function(){
    return this.url.replace('/upload', '/upload/w_200');
 })
 
+const opts = { toJSON: { virtuals: true } };
+
 const CyclingRoutesSchema = new Schema({
     title: String,
     images: [ ImageSchema ],
@@ -40,7 +42,13 @@ const CyclingRoutesSchema = new Schema({
             ref:'Review'
         }
     ]
-});
+}, opts);
+
+CyclingRoutesSchema.virtual('properties.popUpMarkup').get(function(){
+    return `
+    <strong><a href="/routes/${this._id}">${this.title}</a></strong>
+    <p>${this.description.substring(0, 100)}...</p>`
+ })
 
 CyclingRoutesSchema.post('findOneAndDelete', async function(doc){
     if(doc){
