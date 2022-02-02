@@ -3,7 +3,10 @@ const cities = require('./cities');
 const {descriptors, places,} = require ('./seedHelpers');
 const Route = require('../models/routes');
 
-mongoose.connect('mongodb://localhost:27017/bike-routes', {
+
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/bike-routes';
+
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
