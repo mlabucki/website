@@ -70,10 +70,14 @@ const sessionConfig = {
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
-        secure: process.env.HTTPS,
+        secure: false,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
+}
+if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+    sessionConfig.cookie.secure = true;
 }
 app.use(session(sessionConfig))
 app.use(flash());
